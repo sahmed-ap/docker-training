@@ -1,0 +1,55 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  billing-service:
+    build:
+      context: ./billing-service
+      dockerfile: Dockerfile
+    ports:
+      - 5002:5002
+    depends_on:
+      - rabbitmq
+  inventory-service:
+    build:
+      context: ./inventory-service
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - rabbitmq
+  shipping-service:
+    build:
+      context: ./shipping-service
+      dockerfile: Dockerfile
+    ports:
+      - 5007:5007
+    depends_on:
+      - rabbitmq
+  users-service:
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    ports:
+      - 5003:5003
+    depends_on:
+      - rabbitmq
+  data-service:
+    build:
+      context: ./data-service
+      dockerfile: Dockerfile
+    ports:
+      - 5009:5009
+    depends_on:
+      - rabbitmq
+  webhook-service:
+    build:
+      context: ./webhook-service
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5001
+    depends_on:
+      - rabbitmq
