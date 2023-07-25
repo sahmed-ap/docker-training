@@ -6,7 +6,7 @@ const amq = require("./producer.js");
 const consumeMessage = async () => {
   try {
     // "rabbitmq" is the Docker hostname for RabbitMQ
-    const connection = await amqp.connect('amqp://guest:guest@127.0.0.1:5672/'); 
+    const connection = await amqp.connect('amqp://host.docker.internal:5672'); 
     const channel = await connection.createChannel();
     const queueName = 'message_queue_1';
 

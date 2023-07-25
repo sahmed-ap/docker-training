@@ -1,10 +1,15 @@
 version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - rabbitmq_net
   billing-service:
     build:
       context: ./billing-service
@@ -13,6 +18,8 @@ services:
       - 5002:5002
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net
   inventory-service:
     build:
       context: ./inventory-service
@@ -21,6 +28,8 @@ services:
       - 5000:5000
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net  
   shipping-service:
     build:
       context: ./shipping-service
@@ -29,6 +38,8 @@ services:
       - 5007:5007
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net
   users-service:
     build:
       context: ./users-service
@@ -37,6 +48,8 @@ services:
       - 5003:5003
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net
   data-service:
     build:
       context: ./data-service
@@ -45,6 +58,8 @@ services:
       - 5009:5009
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net
   webhook-service:
     build:
       context: ./webhook-service
@@ -53,3 +68,12 @@ services:
       - 5001:5001
     depends_on:
       - rabbitmq
+    networks:
+      - rabbitmq_net
+
+networks:
+  rabbitmq_net:
+    driver: bridge
+
+volumes:
+  rabbitmq_data:
